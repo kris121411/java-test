@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--
+*Author: Monton Posadas
+*Date created: 10/28/2016
+*This HTML contains the view for input Tag field and Button Submit to get the data from the Highrise API.
+-->
+<html>
+    <head>
+        <title>SyncApps</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    </head>
+	<style>
+input[type=text]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+	padding: 14px 0px !important;
+}
+.btn_submit {
+    width: 100%;
+    background-color: #008b8b;
+    color: white;
+    padding: 14px 0px !important;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn_submit:hover {
+    background-color: #00ffff;
+}
+div {
+    border-radius: 5px;
+    background-color: #69a365;
+    padding: 20px;
+	width: 40%;
+	position:fixed;
+	top: 50%;
+    left: 50%;
+	margin-top: -9em; 
+    margin-left: -15em;
+}
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+
+}
+body.loading {
+    overflow: hidden;   
+}
+body.loading .modal {
+    display: block;
+}
+</style>
+<script>
+		$(document).ready(function()
+		{
+		$body = $("body");
+			
+		$('#sub_btn').click(function() 
+			{
+			
+			
+				 if($('#tag_fld').val()) 
+				 {
+					$body.addClass("loading"); 
+				 $.ajax({
+					url: "/gettags",
+					data:{tag:$('#tag_fld').val()},
+							success: function(result)
+							{
+								$body.removeClass("loading");
+								if(result)
+								{
+								window.location.href = window.location.protocol + "//" + window.location.host + "/contactform";	
+								}
+								else
+								{
+								alert("INFO:  No Contact(s) found!");
+								}
+							
+							}
+						});
+				 }
+				 else
+				 {
+					alert('ERROR:  Please input a tag');
+				 }
+			});
+		});
+		
+</script>
+<body>
+
+<div>
+  <!-- <form action="/get" method ="post"> -->
+   <h1>Enter a Tag</h1>
+	<input type="text" value="" id='tag_fld'>
+    <button type="button" class="btn_submit" id="sub_btn">Submit!</button>
+  <!-- </form> -->
+</div>
+<div class="modal"><!-- Place at bottom of page --></div>
+</body>
+</html>

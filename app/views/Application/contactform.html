@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--
+*Author: Monton Posadas
+*Date created: 10/28/2016
+*This HTML contains the view for select Tag field and Contact table data from the Database.
+-->
+
+<html>
+    <head>
+        <title>SyncApps</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+		<script>
+		$(document).ready(function()
+		{
+		
+			$.ajax({
+			url: "/filltag",
+			success: function(result)
+				{
+					
+				var tags = (result.data).substring(1, (result.data).length-1).split(', ');
+				$('#option_tag').append($('<option>', 
+						{ 
+							value: "ALL",
+							text :"ALL" 
+						}));
+						getcontacts("ALL");
+					$(tags).each(function (index,value) 
+					{ 
+					
+						$('#option_tag').append($('<option>', 
+						{ 
+							value: value,
+							text :value 
+						}));
+					})	
+				}
+			});
+			$('#option_tag').change(function() 
+			{
+					getcontacts(this.value);
+			});
+			$('#sub_btn').click(function() 
+			{
+					window.location.href = window.location.protocol + "//" + window.location.host + "/";	
+			});
+			function getcontacts(data)
+			{
+			$.ajax({
+					url: "/getcontact",
+					data:{tag:data},
+					success: function(result)
+						{
+						
+						   $("#data_table").find("tr:not(:first)").remove();
+							$(result).each(function (index, value)
+							{ 
+							var data = jQuery.parseJSON(value)
+								content = "<tr>"+
+								
+								"<td>"+data['firstName']+"</td>"+
+								"<td>"+data['lastName']+"</td>"+
+								"<td>"+data['title']+"</td>"+
+								"<td>"+data['companyName']+"</td>"+
+								"<td>"+data['background']+"</td>"+
+								"<td>"+data['linkedinUrl']+"</td>"+
+								"<td>"+data['MessengerProtocol']+"</td>"+
+								"<td>"+data['MessengerAddress']+"</td>"+
+								"<td>"+data['emailAddress']+"</td>"+
+								"<td>"+data['twitterAccount']+"</td>"+
+								"<td>"+data['address']+"</td>"+
+								"<td>"+data['webAddress']+"</td>"+
+								
+								"</tr>";
+								
+
+								$('#data_table').append(content);
+							})
+						}
+					});
+			}
+		});
+	</script>
+	<style>
+			table {
+				<!-- font-family: arial, sans-serif; -->
+				border-collapse: collapse;
+				width: 100%;
+			}
+
+			td, th {
+				border: 1px solid #dddddd;
+				text-align: left;
+				padding: 1px;
+			}
+
+			tr:nth-child(even) {
+				background-color: #dddddd;
+			}
+			div {
+				border-radius: 5px;
+				background-color: #69a365;
+				padding: 20px;
+			}
+			select {
+				width: 30%;
+				padding: 12px 20px;
+				display: inline-block;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-sizing: border-box;
+				
+			}
+			.btn_submit {
+				width: 20%;
+				background-color: #008b8b;
+				color: white;
+				padding: 14px 0px !important;
+				margin: 8px 0;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+			.btn_submit:hover {
+				background-color: #00ffff;
+			}
+			</style>
+    </head>
+    <body>
+		<div>
+			<select id ="option_tag">
+			</select>
+			<button type="button" class="btn_submit" id="sub_btn">Back to Tag Form</button>
+		</div>
+		
+		 <div>
+		<table id="data_table">
+		  <tr>
+			<th>FIRSTNAME</th>
+			<th>lASTNAME</th>
+			<th>TITLE</th>
+			<th>COMPANY</th>
+			<th>BACKGROUND</th>
+			<th>LINKEDIN</th>
+			<th>MSNGR PRTCL</th>
+			<th>MSNGR ADD</th>
+			<th>EMAIL</th>
+			<th>TWITTER</th>
+			<th>ADDRESS</th>
+			<th>WEB ADD</th>
+		  </tr>
+		  
+		</table>
+		</div>
+    </body>
+</html>
